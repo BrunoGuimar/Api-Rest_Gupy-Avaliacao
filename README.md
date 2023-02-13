@@ -1,6 +1,5 @@
 # Api-Rest_Gupy-Avaliacao
 <p class="has-line-data" data-line-start="0" data-line-end="1">Avaliação Desenvolvedor Back-end</p>
-<p class="has-line-data" data-line-start="2" data-line-end="3">A entrega deverá ser feita da seguinte forma:</p>
 <p class="has-line-data" data-line-start="4" data-line-end="5">Qualidade de código</p>
 <p class="has-line-data" data-line-start="6" data-line-end="8">Durante a implementação de uma nova funcionalidade de software solicitada, quais critérios você avalia e implementa para garantia de qualidade de software?<br>
 R: Analisar os requisitos que a aplicação que sera elaborada necessita para o desenvolvimento, presando a funcionalidade e o desempenho, realização de testes para garantir a funcionalidade dos methodos implementados, e manter o projeto sempre bem documentado para que possa ser compreendido pelos demais integrantes do grupo.</p>
