@@ -1,6 +1,6 @@
 package GupyTest.demo.controllers;
 
-import GupyTest.demo.dao.PessoaDAO;
+import GupyTest.demo.services.PessoaService;
 import GupyTest.demo.models.entities.Endereco;
 import GupyTest.demo.models.entities.Pessoa;
 import GupyTest.demo.models.entities.repositories.PessoaRepository;
@@ -17,7 +17,7 @@ public class PessoaController {
     @Autowired
     PessoaRepository repository;
 
-    PessoaDAO pessoaDAO = new PessoaDAO();
+    PessoaService pessoaDAO = new PessoaService();
 
     //GET METHODS
     @GetMapping

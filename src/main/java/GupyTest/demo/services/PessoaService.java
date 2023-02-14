@@ -1,11 +1,11 @@
-package GupyTest.demo.dao;
+package GupyTest.demo.services;
 
 import GupyTest.demo.models.entities.Endereco;
 import GupyTest.demo.models.entities.Pessoa;
 
 import java.util.Optional;
 
-public class PessoaDAO {
+public class PessoaService {
     public Pessoa setEnderecoToPrincipal(Pessoa pessoa, int index) {
         pessoa.getEndereco().forEach(endereco -> endereco.setIfPrincipal(false));
         pessoa.getEndereco().get(index - 1).setIfPrincipal(true);
