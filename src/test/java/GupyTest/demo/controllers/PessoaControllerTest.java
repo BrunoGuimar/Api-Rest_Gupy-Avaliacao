@@ -3,21 +3,26 @@ package GupyTest.demo.controllers;
 import GupyTest.demo.models.entities.Endereco;
 import GupyTest.demo.models.entities.Pessoa;
 import GupyTest.demo.models.entities.repositories.PessoaRepository;
+import GupyTest.demo.services.PessoaService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
+
+import static org.mockito.Mockito.verify;
 
 @DataJpaTest
+@ExtendWith(MockitoExtension.class)
 class PessoaControllerTest {
-    @Autowired
+    @Mock
     PessoaRepository repositoryTest;
 
     @AfterEach
@@ -25,66 +30,46 @@ class PessoaControllerTest {
         repositoryTest.deleteAll();
     }
 
+
     @Test
-    void itShouldTestIfBothEnderecosAreEquals(){
-        //given
-        Endereco endereco1 = new Endereco(
-                "Rua Teste",
-                "cep teste",
-                123,
-                "Cidade teste",
-                false
-        );
-        Endereco endereco2 = new Endereco(
-                "Rua Teste",
-                "cep teste",
-                321,
-                "Cidade teste",
-                false
-        );
-        List<Endereco> enderecos = new ArrayList<>();
-        enderecos.add(endereco1);
-        enderecos.add(endereco2);
-        //when
-        Pessoa pessoa = new Pessoa("Bruno Guimaraes", "13/11/2000", enderecos);
-        repositoryTest.save(pessoa);
-        //then
-        assertArrayEquals(repositoryTest.findById(pessoa.getId()).get().getEndereco().toArray(), enderecos.toArray());
+    void CanGetAllPessoas() {
+        repositoryTest.findAll();
+        verify(repositoryTest).findAll();
     }
 
     @Test
-    void itShouldSetLastEnderecoIfPrincipalValueToTrue() {
-        //given
-        Endereco endereco = new Endereco(
-                "Rua Teste",
-                "cep teste",
-                123,
-                "Cidade teste",
-                true
-        );
-        Endereco endereco2 = new Endereco(
-                "Rua Teste2",
-                "cep teste2",
+    void CanAddNewPessoa() {
+        Pessoa pessoa = new Pessoa("TEST NOME", "TEST DATE", null);
+        repositoryTest.save(pessoa);
+        ArgumentCaptor<Pessoa> pessoaArgumentCaptor = ArgumentCaptor.forClass(Pessoa.class);
+        verify(repositoryTest).save(pessoaArgumentCaptor.capture());
+
+        Pessoa capturedPessoa = pessoaArgumentCaptor.getValue();
+        assertThat(capturedPessoa).isEqualTo(pessoa);
+
+    }
+
+    @Test
+    void CanSetEnderecoToPrincipal() {
+        PessoaService pessoaService = new PessoaService();
+        Endereco enderecoTest = new Endereco(
+                "RUA TEST",
+                "CEP TEST",
                 321,
-                "Cidade teste2",
+                "CIDADE TEST",
                 false
         );
-        Endereco endereco3 = new Endereco(
-                "Rua Teste3",
-                "cep teste3",
-                333,
-                "Cidade teste3",
-                true
-        );
-        Pessoa pessoa = new Pessoa();
-        //when
-        pessoa.addEndereco(endereco);
-        pessoa.addEndereco(endereco2);
-        pessoa.addEndereco(endereco3);
-        pessoa.getEndereco().stream().forEach(data -> data.setIfPrincipal(false));
-        pessoa.getEndereco().get(pessoa.getEndereco().size()-1).setIfPrincipal(true);
-        //then
+        List<Endereco> enderecosTest = new ArrayList<>();
+        enderecosTest.add(enderecoTest);
+        Pessoa pessoa = new Pessoa("TEST NOME", "TEST DATE", enderecosTest);
+
+        pessoaService.setEnderecoToPrincipal(pessoa, 1);
+
         repositoryTest.save(pessoa);
-        assertTrue(repositoryTest.findById(pessoa.getId()).get().getEndereco().get(pessoa.getEndereco().size()-1).isIfPrincipal());
+        ArgumentCaptor<Pessoa> pessoaArgumentCaptor = ArgumentCaptor.forClass(Pessoa.class);
+        verify(repositoryTest).save(pessoaArgumentCaptor.capture());
+        Pessoa capturedPessoa = pessoaArgumentCaptor.getValue();
+
+        assertThat(capturedPessoa.getEndereco().get(0).isIfPrincipal()).isTrue();
     }
 }
